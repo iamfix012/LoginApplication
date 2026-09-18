@@ -29,11 +29,12 @@ public class LoginTest {
         assertFalse(login.checkPasswordComplexity("password"));
     }
 
-    @Test
-    public void testCellPhoneSuccess() {
-        Login login = new Login();
-        assertTrue(login.checkCellPhoneNumber("+27838968976"));
-    }
+  @Test
+public void testCellPhoneSuccess() {
+    Login login = new Login();
+    // Valid test data specified in rubric[cite: 7]
+    assertTrue(login.checkCellPhoneNumber("+27838968976"));
+}
 
     @Test
     public void testCellPhoneFailure() {
