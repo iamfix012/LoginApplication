@@ -38,10 +38,30 @@ public class Login {
         return hasUpper && hasDigit && hasSpecial;
     }
 
-    // Validates phone number for international format (e.g., +27838968976)
-    public boolean checkCellPhoneNumber(String cellNumber) {
-        return cellNumber.matches("^\\+\\d{1,3}\\d{8,10}$");
+  // Validates international cell phone number (must start with +27 and have at most 9 characters after +27)
+public boolean checkCellPhoneNumber(String cellNumber) {
+    // Check if it starts with +27
+    if (!cellNumber.startsWith("+27")) {
+        return false;
     }
+
+    // Extract the digits after '+27'
+    String numberDigits = cellNumber.substring(3);
+
+    // Ensure all remaining characters are digits and length is between 1 and 9 digits (or max 10 total characters)
+    if (numberDigits.length() == 0 || numberDigits.length() > 9) {
+        return false;
+    }
+
+    // Check that every remaining character is a digit
+    for (int i = 0; i < numberDigits.length(); i++) {
+        if (!Character.isDigit(numberDigits.charAt(i))) {
+            return false;
+        }
+    }
+
+    return true;
+}
 
     // Helper methods to set user details after validation
     public void setFirstName(String firstName) {
