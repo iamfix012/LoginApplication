@@ -1,3 +1,4 @@
+// PROG5121 Part 1 - Login Application Logic
 package loginapplication;
 
 public class Login {
