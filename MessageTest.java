@@ -3,7 +3,7 @@ package loginapplication;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-
+// Tests hash generation against assignment test data specifications
 public class MessageTest {
 
     // 1. MESSAGE LENGTH TESTS 
