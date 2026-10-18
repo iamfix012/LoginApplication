@@ -1,5 +1,7 @@
 package loginapplication;
-
+/**
+ * Version 1.2 - Added complete message validation and JSON serialization logic.
+ */
 
 import java.util.Scanner;
 
