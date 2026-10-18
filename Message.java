@@ -5,12 +5,7 @@ import java.io.IOException;
 import java.util.Random;
 
 /**
- * Message class managing message properties, hash generation, and JSON storage.
- * Designed for Part 2 of PROG5121 Assessment.
- * 
- * Reference / Attribution:
- * Oracle (2024) Class FileWriter - Java Platform SE 8.
- * Available at: https://docs.oracle.com/javase/8/docs/api/java/io/FileWriter.html
+ * Version 1.2 - Added complete message validation and JSON serialization logic.
  */
 public class Message {
 
