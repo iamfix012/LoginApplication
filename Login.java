@@ -6,7 +6,6 @@ public class Login {
 
     private String registeredUsername;
     private String registeredPassword;
-    private String registeredCellNumber;
     private String firstName;
     private String lastName;
 
@@ -39,30 +38,16 @@ public class Login {
         return hasUpper && hasDigit && hasSpecial;
     }
 
-  // Validates international cell phone number (must start with +27 and have at most 9 characters after +27)
+// Validates international cell phone number (+27 format)
+    // Reference: Java Pattern class regex syntax (Oracle Docs)
+  
 public boolean checkCellPhoneNumber(String cellNumber) {
-    // Check if it starts with +27
-    if (!cellNumber.startsWith("+27")) {
-        return false;
-    }
-
-    // Extract the digits after '+27'
-    String numberDigits = cellNumber.substring(3);
-
-    // Ensure all remaining characters are digits and length is between 1 and 9 digits (or max 10 total characters)
-    if (numberDigits.length() == 0 || numberDigits.length() > 9) {
-        return false;
-    }
-
-    // Check that every remaining character is a digit
-    for (int i = 0; i < numberDigits.length(); i++) {
-        if (!Character.isDigit(numberDigits.charAt(i))) {
-            return false;
-        }
-    }
-
-    return true;
+    // Regex: starts with +27 followed by 1 to 9 digits (max 12 characters total)
+    String regex = "^\\+27\\d{1,9}$";
+    return cellNumber != null && cellNumber.matches(regex);
 }
+
+
 
     // Helper methods to set user details after validation
     public void setFirstName(String firstName) {
@@ -77,7 +62,6 @@ public boolean checkCellPhoneNumber(String cellNumber) {
     public String registerUser(String username, String password, String cellNumber) {
         this.registeredUsername = username;
         this.registeredPassword = password;
-        this.registeredCellNumber = cellNumber;
         return "Username and password successfully captured.";
     }
 
