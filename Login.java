@@ -1,6 +1,7 @@
-// PROG5121 Part 1 - Login Application Logic
+// PROG5121POE - Login Application Logic
 package loginapplication;
 
+// Verified compatibility with Part 2 messaging integration
 public class Login {
 
     private String registeredUsername;

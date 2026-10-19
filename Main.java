@@ -2,74 +2,135 @@ package loginapplication;
 
 import java.util.Scanner;
 
+/**
+ * Main application entry point for QuickChat.
+ * Handles user authentication verification and interactive menu loops.
+ */
 public class Main {
 
     public static void main(String[] args) {
-        try (Scanner input = new Scanner(System.in)) {
-            Login userLogin = new Login();
-            
-            System.out.println("=== USER REGISTRATION ===");
-            
-            System.out.print("Enter First Name: ");
-            userLogin.setFirstName(input.nextLine());
-            
-            System.out.print("Enter Last Name: ");
-            userLogin.setLastName(input.nextLine());
-            
-            // Username Validation Loop 
-            System.out.print("Enter Username: ");
-            String username = input.nextLine();
-            while (!userLogin.checkUserName(username)) {
-                System.out.println("Username is not correctly formatted; please ensure that your username contains an underscore and is no more than five characters in length.");
-                System.out.print("Please try entering your Username again: ");
-                username = input.nextLine();
-            }
-            System.out.println("Username successfully captured.");
-            
-            // Password Validation Loop
-            System.out.print("Enter Password: ");
-            String password = input.nextLine();
-            while (!userLogin.checkPasswordComplexity(password)) {
-                System.out.println("Password is not correctly formatted; please ensure that the password contains at least eight characters, a capital letter, a number, and a special character.");
-                System.out.print("Please try entering your Password again: ");
-                password = input.nextLine();
-            }
-            System.out.println("Password successfully captured.");
-            
-            // Cell Phone Number Validation Loop 
-            System.out.print("Enter Cell Phone Number (e.g. +27838968976): ");
-            String cellNumber = input.nextLine();
-            while (!userLogin.checkCellPhoneNumber(cellNumber)) {
-                System.out.println("Cell phone number incorrectly formatted or does not contain international code.");
-                System.out.print("Please correct the number and try again: ");
-                cellNumber = input.nextLine();
-            }
-            System.out.println("Cell phone number successfully added.");
-            
-            // Complete registration once all individual inputs pass validation
-            userLogin.registerUser(username, password, cellNumber);
-            System.out.println("\nRegistration Completed Successfully!\n");
-            
-            // Login Section with Loop
-            System.out.println("=== USER LOGIN ===");
-            boolean loggedIn = false;
-            
-            while (!loggedIn) {
-                System.out.print("Enter Login Username: ");
-                String loginUser = input.nextLine();
-                
-                System.out.print("Enter Login Password: ");
-                String loginPass = input.nextLine();
-                
-                String loginStatus = userLogin.returnLoginStatus(loginUser, loginPass);
-                System.out.println(loginStatus);
-                
-                if (userLogin.loginUser(loginUser, loginPass)) {
-                    loggedIn = true;
-                } else {
-                    System.out.println("Login failed. Please try again.\n");
-                }
+        Scanner scanner = new Scanner(System.in);
+        Login userLogin = new Login();
+
+        // Step 1: User Registration
+        System.out.println("=== USER REGISTRATION ===");
+        System.out.print("Enter First Name: ");
+        String firstName = scanner.nextLine();
+        userLogin.setFirstName(firstName);
+
+        System.out.print("Enter Last Name: ");
+        String lastName = scanner.nextLine();
+        userLogin.setLastName(lastName);
+
+        System.out.print("Enter Username: ");
+        String username = scanner.nextLine();
+
+        System.out.print("Enter Password: ");
+        String password = scanner.nextLine();
+
+        System.out.print("Enter Cell Phone (+27...): ");
+        String cellNumber = scanner.nextLine();
+
+        String regStatus = userLogin.registerUser(username, password, cellNumber);
+        System.out.println(regStatus);
+
+        if (!regStatus.equals("Username and password successfully captured.")) {
+            System.out.println("Registration failed. Program terminating.");
+            return;
+        }
+
+        // Step 2: User Login Authentication
+        System.out.println("\n=== USER LOGIN ===");
+        System.out.print("Enter Username: ");
+        String loginUser = scanner.nextLine();
+
+        System.out.print("Enter Password: ");
+        String loginPass = scanner.nextLine();
+
+        String loginStatus = userLogin.returnLoginStatus(loginUser, loginPass);
+        System.out.println(loginStatus);
+
+        if (!userLogin.loginUser(loginUser, loginPass)) {
+            System.out.println("Login failed. Program terminating.");
+            return;
+        }
+
+        // Step 3: QuickChat Interactive Menu System (Part 2)
+        System.out.println("\nWelcome to QuickChat.");
+        boolean running = true;
+        int totalMessagesSent = 0;
+
+        while (running) {
+            System.out.println("\nPlease choose an option:");
+            System.out.println("1) Send Messages");
+            System.out.println("2) Show recently sent messages");
+            System.out.println("3) Quit");
+            System.out.print("Choice: ");
+
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // Consume remaining newline
+
+            switch (choice) {
+                case 1:
+                    System.out.print("How many messages would you like to enter? ");
+                    int numMessages = scanner.nextInt();
+                    scanner.nextLine(); // Consume remaining newline
+
+                    for (int i = 0; i < numMessages; i++) {
+                        System.out.println("\n--- Entering Message " + (i + 1) + " ---");
+
+                        System.out.print("Enter Recipient Cell Number: ");
+                        String recipient = scanner.nextLine();
+
+                        System.out.print("Enter Message Text: ");
+                        String text = scanner.nextLine();
+
+                        Message msg = new Message(i, recipient, text);
+
+                        // Validate Recipient Cell Format
+                        String cellCheck = msg.checkRecipientCell(recipient);
+                        System.out.println(cellCheck);
+
+                        // Validate Message Length Limits
+                        String lenCheck = msg.checkMessageLength(text);
+                        System.out.println(lenCheck);
+
+                        if (lenCheck.equals("Message ready to send.") && cellCheck.equals("Cell phone number successfully captured.")) {
+                            System.out.println("Choose action: 1) Send Message  2) Disregard Message  3) Store Message to send later");
+                            int action = scanner.nextInt();
+                            scanner.nextLine();
+
+                            String actionResult = msg.SentMessage(action);
+                            System.out.println(actionResult);
+
+                            if (action == 1) {
+                                totalMessagesSent++;
+                                System.out.println("\n" + msg.printMessages());
+                            } else if (action == 3) {
+                                msg.storeMessage();
+                                System.out.println("Message stored as JSON.");
+                            }
+                        }
+                    }
+
+                    System.out.println("\nTotal messages sent in this session: " + totalMessagesSent);
+                    break;
+
+                case 2:
+                    System.out.println("Coming Soon.");
+                    break;
+
+                case 3:
+                    System.out.println("Exiting QuickChat. Goodbye!");
+                    running = false;
+                    break;
+
+                default:
+                    System.out.println("Invalid option. Please try again.");
+                    break;
             }
         }
+        
+        scanner.close();
     }
 }
